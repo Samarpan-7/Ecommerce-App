@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Catalog — Death Mart</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzSdFnao4Si8fzlM5IozWw6VlbcCylDT4Oln2I565WpQ&s=10">
+    <link rel="stylesheet" href="../styles/index.css">
+    <style>
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-bottom: 30px;
+        }
+
+        .category-chip-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .category-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .category-chip:hover, .category-chip.active {
+            background: var(--primary-red);
+            color: #fff;
+            border-color: var(--primary-red);
+            box-shadow: var(--shadow-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header"></header>
+
+    <main style="padding: 40px 0 80px;">
+        <div class="container">
+            <div style="margin-bottom: 30px;">
+                <span class="section-subtitle">Catalog & Reliquary</span>
+                <h1 class="gothic-title" style="font-size: 38px; color: var(--text-main); margin-top: 4px;">ALL CURSED PRODUCTS</h1>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">
+                    Search and filter items blessed by Shinigami, crafted for detective inquiries, or worn by the righteous.
+                </p>
+            </div>
+
+            <!-- Search and Sort Controls -->
+            <div class="filter-bar">
+                <div style="flex: 1; max-width: 450px; position: relative;">
+                    <input type="text" id="search-input" placeholder="🔍 Search notebook, apple, quill, cake..." style="width: 100%;">
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 13px; color: var(--text-muted);">Sort By:</span>
+                    <select id="sort-select" style="min-width: 160px;">
+                        <option value="id-desc">Newest Arrivals</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="name-asc">Alphabetical (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Category Chips -->
+            <div id="category-filters" class="category-chip-container">
+                <!-- Populated dynamically via JS -->
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-grid" class="product-grid">
+                <!-- Populated dynamically via JS -->
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination-container"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/components.js"></script>
+    <script src="../scripts/products.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHeader('products');
+            renderFooter();
+        });
+    </script>
+</body>
+</html>

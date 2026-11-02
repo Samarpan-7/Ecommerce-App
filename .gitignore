@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+*.log
+/backend/Death_Mart/target/
+/backend/Death_Mart/uploads/products/
+/.idea/
+/.vscode/

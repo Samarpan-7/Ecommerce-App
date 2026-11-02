@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders & Tracking — Death Mart</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzSdFnao4Si8fzlM5IozWw6VlbcCylDT4Oln2I565WpQ&s=10">
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header"></header>
+
+    <main style="padding: 40px 0 80px;">
+        <div class="container" style="max-width: 900px;">
+            <div style="margin-bottom: 30px;">
+                <span class="section-subtitle">Account Activity</span>
+                <h1 class="gothic-title" style="font-size: 38px; color: var(--text-main); margin-top: 4px;">YOUR SEALED ORDERS</h1>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">
+                    Review past contracts, check parcel fulfillment statuses, and track Shinigami dispatches.
+                </p>
+            </div>
+
+            <!-- Order Tracking Search Form -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; margin-bottom: 30px;">
+                <form id="order-track-form" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 260px;">
+                        <input type="text" id="track-order-number" placeholder="Enter Order # (e.g. DM-20261101...)" style="width: 100%;" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Track Specific Order</button>
+                    <button type="button" class="btn btn-primary" onclick="loadOrders()">Show All My Orders</button>
+                </form>
+            </div>
+
+            <!-- Orders Container -->
+            <div id="orders-container">
+                <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                    ⏳ Summoning your orders...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/components.js"></script>
+    <script src="../scripts/orders.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHeader('orders');
+            renderFooter();
+        });
+    </script>
+</body>
+</html>

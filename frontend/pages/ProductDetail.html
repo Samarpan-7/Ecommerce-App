@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details — Death Mart</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzSdFnao4Si8fzlM5IozWw6VlbcCylDT4Oln2I565WpQ&s=10">
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header"></header>
+
+    <main style="padding: 40px 0 80px;">
+        <div class="container">
+            <div style="margin-bottom: 24px;">
+                <a href="./Products.html" style="font-size: 14px; color: var(--text-muted);">&larr; Back to Products Catalog</a>
+            </div>
+
+            <div id="product-detail-container" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px;">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Related Products Section -->
+            <div style="margin-top: 60px;">
+                <div class="section-header" style="text-align: left; margin-bottom: 24px;">
+                    <div class="section-subtitle">Complementary Artifacts</div>
+                    <h3 class="gothic-title" style="font-size: 26px; color: var(--text-main);">YOU MAY ALSO DESIRE</h3>
+                </div>
+                <div id="related-products-grid" class="product-grid"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/components.js"></script>
+    <script>
+        let currentProduct = null;
+        let selectedQuantity = 1;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            renderHeader('products');
+            renderFooter();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                window.location.href = './Products.html';
+                return;
+            }
+
+            await loadProductDetail(productId);
+        });
+
+        async function loadProductDetail(id) {
+            const container = document.getElementById('product-detail-container');
+            try {
+                const response = await Api.get(`/products/${id}`);
+                if (response && response.data) {
+                    currentProduct = response.data;
+                    renderDetail(currentProduct);
+                    loadRelatedProducts(currentProduct.categoryId, currentProduct.id);
+                }
+            } catch (error) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #ff4d4f;">
+                        <h3>Failed to load product details</h3>
+                        <p style="color: var(--text-muted); margin-top: 8px;">${escapeHtml(error.message)}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderDetail(p) {
+            const container = document.getElementById('product-detail-container');
+            const hasDiscount = p.discountPrice && p.discountPrice < p.price;
+            const effectivePrice = hasDiscount ? p.discountPrice : p.price;
+            const discountPercent = hasDiscount ? Math.round(((p.price - p.discountPrice) / p.price) * 100) : 0;
+
+            container.innerHTML = `
+                <div style="border-radius: var(--radius-md); overflow: hidden; background: #1a1a24; border: 1px solid var(--border-color); position: relative; aspect-ratio: 1;">
+                    <img src="${escapeHtml(safeImageUrl(p.imageUrl))}" alt="${escapeHtml(p.name)}" style="width: 100%; height: 100%; object-fit: cover;">
+                    ${hasDiscount ? `<span class="product-card-discount" style="font-size: 13px; padding: 6px 12px;">-${discountPercent}% OFF</span>` : ''}
+                </div>
+
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <span class="badge badge-red" style="align-self: flex-start; margin-bottom: 12px;">
+                        ${escapeHtml(p.categoryName || 'Cursed Artifact')}
+                    </span>
+
+                    <h1 class="gothic-title" style="font-size: 32px; color: #fff; margin-bottom: 12px; line-height: 1.2;">
+                        ${escapeHtml(p.name)}
+                    </h1>
+
+                    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px;">
+                        <span style="font-size: 28px; font-weight: 700; color: var(--primary-red);">
+                            ₹${effectivePrice.toLocaleString('en-IN')}
+                        </span>
+                        ${hasDiscount ? `<span style="font-size: 18px; color: var(--text-dim); text-decoration: line-through;">₹${p.price.toLocaleString('en-IN')}</span>` : ''}
+                    </div>
+
+                    <p style="font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border-color);">
+                        ${escapeHtml(p.description || 'A rare occult relic recovered from the human realm, crafted with supernatural attention to detail.')}
+                    </p>
+
+                    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                        <span style="font-size: 14px; font-weight: 600; color: var(--text-main);">Quantity:</span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <button class="btn btn-secondary btn-sm" onclick="changeQty(-1)" style="width: 36px; height: 36px; padding: 0;">-</button>
+                            <span id="detail-qty" style="font-size: 16px; font-weight: 700; min-width: 30px; text-align: center;">1</span>
+                            <button class="btn btn-secondary btn-sm" onclick="changeQty(1)" style="width: 36px; height: 36px; padding: 0;">+</button>
+                        </div>
+                        <span style="font-size: 13px; color: ${p.stockQuantity > 5 ? 'var(--badge-green)' : 'var(--badge-gold)'};">
+                            (${p.stockQuantity > 0 ? `${p.stockQuantity} available in vault` : 'Out of stock'})
+                        </span>
+                    </div>
+
+                    <div style="display: flex; gap: 14px;">
+                        <button class="btn btn-primary btn-lg" style="flex: 1;" onclick="handleAddToCart()" ${p.stockQuantity <= 0 ? 'disabled' : ''}>
+                            ${p.stockQuantity <= 0 ? 'Out of Stock' : '🛒 Add to Cursed Cart'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function changeQty(delta) {
+            const next = selectedQuantity + delta;
+            if (currentProduct && next >= 1 && next <= currentProduct.stockQuantity) {
+                selectedQuantity = next;
+                document.getElementById('detail-qty').textContent = selectedQuantity;
+            }
+        }
+
+        async function handleAddToCart() {
+            const token = Api.getToken();
+            if (!token) {
+                showToast('Please sign in to add items to cart', 'info');
+                setTimeout(() => window.location.href = './Login.html', 1000);
+                return;
+            }
+
+            try {
+                await Api.post('/cart/items', { productId: currentProduct.id, quantity: selectedQuantity });
+                showToast(`Added ${selectedQuantity} × ${currentProduct.name} to cart!`, 'success');
+                updateCartBadge();
+            } catch (err) {
+                showToast(err.message || 'Failed to add item', 'error');
+            }
+        }
+
+        async function loadRelatedProducts(categoryId, currentId) {
+            const container = document.getElementById('related-products-grid');
+            if (!container || !categoryId) return;
+
+            try {
+                const response = await Api.get('/products', { categoryId: categoryId, size: 4 });
+                if (response && response.data && response.data.content) {
+                    const filtered = response.data.content.filter(p => p.id !== currentId).slice(0, 3);
+                    container.innerHTML = filtered.map(product => `
+                        <div class="product-card">
+                            <div class="product-card-img-wrap">
+                                <img src="${escapeHtml(safeImageUrl(product.imageUrl))}" alt="${escapeHtml(product.name)}" loading="lazy">
+                            </div>
+                            <div class="product-card-body">
+                                <h4 class="product-card-title">${escapeHtml(product.name)}</h4>
+                                <div class="product-price-row">
+                                    <span class="product-price-current">₹${(product.discountPrice || product.price).toLocaleString('en-IN')}</span>
+                                </div>
+                                <a href="./ProductDetail.html?id=${product.id}" class="btn btn-secondary btn-sm btn-full">View Artifact</a>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error('Failed to load related products', e);
+            }
+        }
+    </script>
+</body>
+</html>

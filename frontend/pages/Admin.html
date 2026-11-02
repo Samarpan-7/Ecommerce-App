@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Command Citadel — Death Mart</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzSdFnao4Si8fzlM5IozWw6VlbcCylDT4Oln2I565WpQ&s=10">
+    <link rel="stylesheet" href="../styles/index.css">
+    <style>
+        .admin-nav-tabs {
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 28px;
+        }
+
+        .admin-tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .admin-tab-btn.active {
+            color: var(--primary-red);
+        }
+
+        .admin-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-red);
+        }
+
+        .admin-tab-content {
+            display: none;
+        }
+
+        .admin-tab-content.active {
+            display: block;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: left;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .stat-val {
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            padding: 12px;
+            color: var(--text-dim);
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header"></header>
+
+    <main style="padding: 40px 0 80px;">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <span class="badge badge-red" style="margin-bottom: 6px;">Admin Access Level</span>
+                    <h1 class="gothic-title" style="font-size: 34px; color: #fff;">COMMAND CITADEL</h1>
+                    <p style="color: var(--text-muted); font-size: 14px;">Manage catalog inventory, fulfill customer orders, and inspect incoming messages.</p>
+                </div>
+
+                <div>
+                    <button id="add-product-btn" class="btn btn-primary">
+                        + Add Cursed Product
+                    </button>
+                </div>
+            </div>
+
+            <!-- Overview Stats Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; margin-bottom: 36px;">
+                <div class="stat-card">
+                    <div class="stat-label">Total Revenue</div>
+                    <div id="stat-revenue" class="stat-val" style="color: var(--badge-green);">₹0</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Orders</div>
+                    <div id="stat-orders" class="stat-val">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Pending / Processing</div>
+                    <div id="stat-pending-orders" class="stat-val" style="color: var(--badge-gold);">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Active Products</div>
+                    <div id="stat-products" class="stat-val">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Low Stock Alerts</div>
+                    <div id="stat-low-stock" class="stat-val" style="color: var(--primary-red);">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Registered Mortals</div>
+                    <div id="stat-users" class="stat-val">0</div>
+                </div>
+            </div>
+
+            <!-- Admin Navigation Tabs -->
+            <div class="admin-nav-tabs">
+                <button class="admin-tab-btn active" onclick="switchAdminTab('tab-products')">Products Catalog</button>
+                <button class="admin-tab-btn" onclick="switchAdminTab('tab-orders')">Orders Fulfillment</button>
+                <button class="admin-tab-btn" onclick="switchAdminTab('tab-messages')">Customer Queries</button>
+            </div>
+
+            <!-- Tab 1: Products -->
+            <div id="tab-products" class="admin-tab-content active">
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-products-table-body">
+                            <tr>
+                                <td colspan="7" style="padding: 24px; text-align: center; color: var(--text-muted);">Loading products...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 2: Orders -->
+            <div id="tab-orders" class="admin-tab-content">
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Total Due</th>
+                                <th>Status Action</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-orders-table-body">
+                            <tr>
+                                <td colspan="5" style="padding: 24px; text-align: center; color: var(--text-muted);">Loading orders...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Customer Messages -->
+            <div id="tab-messages" class="admin-tab-content">
+                <div id="admin-messages-container" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px;">
+                    <p style="color: var(--text-muted);">Loading inquiries...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Product Add / Edit Modal -->
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title" style="font-size: 18px; color: #fff;">Add Cursed Product</h3>
+                <button id="close-product-modal" class="modal-close-btn">&times;</button>
+            </div>
+
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+
+                <div style="margin-bottom: 14px;">
+                    <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">Product Name *</label>
+                    <input type="text" id="product-name" required style="width: 100%;">
+                </div>
+
+                <div style="margin-bottom: 14px;">
+                    <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">Category *</label>
+                    <select id="product-category" required style="width: 100%;">
+                        <option value="">Loading categories...</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">Price (₹) *</label>
+                        <input type="number" id="product-price" step="0.01" min="1" required style="width: 100%;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">Discount Price (₹)</label>
+                        <input type="number" id="product-discount" step="0.01" min="0" style="width: 100%;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 14px;">
+                    <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">Stock Inventory *</label>
+                    <input type="number" id="product-stock" min="0" required style="width: 100%;">
+                </div>
+
+                <div style="margin-bottom: 14px;">
+                    <label for="product-image" style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">Product Image (JPG, JPEG, PNG, WEBP; max 5 MB)</label>
+                    <input type="file" id="product-image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="width: 100%;">
+                    <input type="hidden" id="product-existing-image-url">
+                    <img id="product-image-preview" alt="Product image preview" hidden style="display: none; max-width: 180px; max-height: 160px; object-fit: cover; border-radius: var(--radius-sm); margin-top: 10px;">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px;">Description</label>
+                    <textarea id="product-desc" rows="3" style="width: 100%;"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/components.js"></script>
+    <script src="../scripts/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHeader('admin');
+            renderFooter();
+        });
+
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+
+            event.target.classList.add('active');
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

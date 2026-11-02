@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact & Shinigami Inquiries — Death Mart</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzSdFnao4Si8fzlM5IozWw6VlbcCylDT4Oln2I565WpQ&s=10">
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header"></header>
+
+    <main style="padding: 60px 0 100px;">
+        <div class="container" style="max-width: 1000px;">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <span class="section-subtitle">Reach The Other Side</span>
+                <h1 class="gothic-title" style="font-size: 42px; color: #fff; margin-top: 6px;">COMMUNE WITH US</h1>
+                <p style="font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 10px auto 0;">
+                    Have questions about an artifact, defective apple shipment, or custom binding? Transmit your query.
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: flex-start;">
+                <!-- Contact Form -->
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-card);">
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #fff;">
+                        Send an Occult Dispatch
+                    </h3>
+
+                    <form id="contact-form">
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Your Name *</label>
+                            <input type="text" id="name" placeholder="e.g. Teru Mikami" required style="width: 100%;">
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Email Address *</label>
+                            <input type="email" id="email" placeholder="name@domain.com" required style="width: 100%;">
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Subject *</label>
+                            <input type="text" id="subject" placeholder="e.g. Inquiry regarding Death Note replica batch" required style="width: 100%;">
+                        </div>
+
+                        <div style="margin-bottom: 24px;">
+                            <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">Message *</label>
+                            <textarea id="message" rows="5" placeholder="State your inquiry with maximum clarity..." required style="width: 100%; resize: vertical;"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full btn-lg">
+                            Send Message to Death Mart &rarr;
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Info & FAQ -->
+                <div>
+                    <!-- Quick Info -->
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; margin-bottom: 24px;">
+                        <h4 style="font-size: 16px; color: #fff; margin-bottom: 14px;">Contact Coordinates</h4>
+                        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px; color: var(--text-muted);">
+                            <div>📍 <strong>Realm HQ:</strong> 7-14 Kanto Investigation Bureau, Tokyo, Japan</div>
+                            <div>✉️ <strong>Occult Dispatch:</strong> support@deathmart.com</div>
+                            <div>⚡ <strong>Working Hours:</strong> Midnight to Dawn (24/7 Portal)</div>
+                        </div>
+                    </div>
+
+                    <!-- Frequently Asked Questions -->
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px;">
+                        <h4 style="font-size: 16px; color: #fff; margin-bottom: 16px;">Frequently Asked Questions</h4>
+
+                        <div style="margin-bottom: 16px;">
+                            <strong style="font-size: 14px; color: var(--text-main); display: block; margin-bottom: 4px;">Are these notebooks dangerous?</strong>
+                            <p style="font-size: 13px; color: var(--text-muted);">All replicas sold on Death Mart are calibrated for cosplay, display, and journaling purposes without lethal metaphysical consequences.</p>
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <strong style="font-size: 14px; color: var(--text-main); display: block; margin-bottom: 4px;">How fast is shipping?</strong>
+                            <p style="font-size: 13px; color: var(--text-muted);">Standard orders arrive within 2–4 business days via high-priority courier. Tracking numbers are generated upon dispatch.</p>
+                        </div>
+
+                        <div>
+                            <strong style="font-size: 14px; color: var(--text-main); display: block; margin-bottom: 4px;">Can I return an item?</strong>
+                            <p style="font-size: 13px; color: var(--text-muted);">We offer a 14-day return window on unmarred products in their original protective packaging.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/components.js"></script>
+    <script src="../scripts/contact.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHeader('contact');
+            renderFooter();
+        });
+    </script>
+</body>
+</html>

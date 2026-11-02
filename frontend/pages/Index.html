@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Death Mart — The Premier Shinigami Marketplace</title>
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzSdFnao4Si8fzlM5IozWw6VlbcCylDT4Oln2I565WpQ&s=10">
+    <link rel="stylesheet" href="../styles/index.css">
+</head>
+<body>
+
+    <!-- Dynamic Header -->
+    <header class="site-header"></header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <video class="hero-video-bg" autoplay muted loop playsinline>
+            <source src="../assets/Ecommerce-DeathNote.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+            <span class="hero-tag">Official Shinigami Artifacts</span>
+            <h1 class="hero-title gothic-title">WELCOME TO <span>DEATH MART</span></h1>
+            <p class="hero-subtitle">
+                The forbidden marketplace where gods of death and brilliant minds trade notebooks, relics, detective confectionery, and cursed collectibles.
+            </p>
+            <div class="hero-actions">
+                <a href="./Products.html" class="btn btn-primary btn-lg">Explore Inventory &rarr;</a>
+                <a href="./About.html" class="btn btn-secondary btn-lg">Read Our Lore</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Highlights Section -->
+    <section style="padding: 70px 0 40px; background: var(--bg-surface); border-bottom: 1px solid var(--border-color);">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-subtitle">Categorized Relics</div>
+                <h2 class="section-title">BROWSE BY REALM</h2>
+            </div>
+
+            <div id="homepage-categories" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+                <p style="color: var(--text-muted);">Loading categories...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section style="padding: 70px 0;">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-subtitle">Hand-picked by Ryuk</div>
+                <h2 class="section-title">FEATURED ARTIFACTS</h2>
+            </div>
+
+            <div id="featured-products-grid" class="product-grid">
+                <!-- Dynamically populated from API -->
+            </div>
+
+            <div style="text-align: center; margin-top: 48px;">
+                <a href="./Products.html" class="btn btn-primary btn-lg">View Complete Catalog &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Death Mart Section -->
+    <section style="padding: 70px 0; background: var(--bg-surface); border-top: 1px solid var(--border-color);">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-subtitle">Our Supernatural Pledge</div>
+                <h2 class="section-title">WHY CHOOSE DEATH MART</h2>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 30px; text-align: center;">
+                    <div style="font-size: 38px; margin-bottom: 16px;">📓</div>
+                    <h3 style="font-size: 18px; margin-bottom: 10px; color: var(--text-main);">100% Authentic Relics</h3>
+                    <p style="font-size: 14px; color: var(--text-muted);">Every notebook and quill is strictly vetted by certified Shinigami for mortal safety and dark authenticity.</p>
+                </div>
+
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 30px; text-align: center;">
+                    <div style="font-size: 38px; margin-bottom: 16px;">⚡</div>
+                    <h3 style="font-size: 18px; margin-bottom: 10px; color: var(--text-main);">Shinigami Speed Delivery</h3>
+                    <p style="font-size: 14px; color: var(--text-muted);">Orders transported faster than a human heartbeat. Free worldwide dispatch on orders exceeding ₹999.</p>
+                </div>
+
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 30px; text-align: center;">
+                    <div style="font-size: 38px; margin-bottom: 16px;">🔒</div>
+                    <h3 style="font-size: 18px; margin-bottom: 10px; color: var(--text-main);">Discreet & Cryptic Packaging</h3>
+                    <p style="font-size: 14px; color: var(--text-muted);">No investigator or task force will identify what lies inside your cursed parcel. Total confidentiality.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Footer -->
+    <footer class="site-footer"></footer>
+
+    <!-- Scripts -->
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/components.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            renderHeader('home');
+            renderFooter();
+
+            const categoryContainer = document.getElementById('homepage-categories');
+            try {
+                const categoriesResponse = await Api.get('/categories');
+                const categories = categoriesResponse && categoriesResponse.data;
+                if (Array.isArray(categories) && categories.length) {
+                    categoryContainer.innerHTML = categories.map(category => `
+                        <a href="./Products.html?category=${encodeURIComponent(category.id)}" class="category-card" style="position: relative; border-radius: var(--radius-md); overflow: hidden; height: 160px; border: 1px solid var(--border-color); display: flex; align-items: flex-end; padding: 20px; text-decoration: none; background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 100%), url('${safeImageUrl(category.imageUrl)}') center/cover;">
+                            <div>
+                                <h4 style="font-size: 18px; color: #fff; font-weight: 700;">${escapeHtml(category.name)}</h4>
+                                <span style="font-size: 12px; color: var(--primary-red); font-weight: 600;">Browse ${Number(category.productCount) || 0} products &rarr;</span>
+                            </div>
+                        </a>
+                    `).join('');
+                } else {
+                    categoryContainer.innerHTML = '<p style="color: var(--text-muted);">No product categories are available.</p>';
+                }
+            } catch (error) {
+                console.error('Failed to load homepage categories:', error);
+                categoryContainer.innerHTML = `<p style="color: var(--text-muted);">Unable to load categories: ${escapeHtml(error.message)}</p>`;
+            }
+
+            // Load 4 featured products dynamically
+            const container = document.getElementById('featured-products-grid');
+            if (container) {
+                try {
+                    const response = await Api.get('/products', { size: 4, sortBy: 'id', sortDir: 'desc' });
+                    if (response && response.data && Array.isArray(response.data.content)) {
+                        if (response.data.content.length === 0) {
+                            container.innerHTML = '<p style="grid-column: 1 / -1; color: var(--text-muted);">No active products are available yet.</p>';
+                            return;
+                        }
+                        container.innerHTML = response.data.content.map(product => {
+                            const hasDiscount = product.discountPrice && product.discountPrice < product.price;
+                            const effectivePrice = hasDiscount ? product.discountPrice : product.price;
+                            const discountPercent = hasDiscount ? Math.round(((product.price - product.discountPrice) / product.price) * 100) : 0;
+                            const inStock = Number(product.stockQuantity) > 0;
+
+                            return `
+                                <div class="product-card">
+                                    <div class="product-card-img-wrap">
+                                        <img src="${escapeHtml(safeImageUrl(product.imageUrl))}" alt="${escapeHtml(product.name)}" loading="lazy">
+                                        ${hasDiscount ? `<span class="product-card-discount">-${discountPercent}% OFF</span>` : ''}
+                                    </div>
+                                    <div class="product-card-body">
+                                        <span class="product-category-tag">${escapeHtml(product.categoryName || 'Artifact')}</span>
+                                        <h3 class="product-card-title">${escapeHtml(product.name)}</h3>
+                                        <p class="product-card-desc">${escapeHtml(product.description || '')}</p>
+                                        
+                                        <div class="product-price-row">
+                                            <span class="product-price-current">₹${effectivePrice.toLocaleString('en-IN')}</span>
+                                            ${hasDiscount ? `<span class="product-price-original">₹${product.price.toLocaleString('en-IN')}</span>` : ''}
+                                            <span style="margin-left: auto; font-size: 11px; color: ${inStock ? 'var(--badge-green)' : 'var(--badge-gold)'};">
+                                                ${inStock ? `${Number(product.stockQuantity)} in stock` : 'Out of stock'}
+                                            </span>
+                                        </div>
+
+                                        <div class="product-card-footer">
+                                            <a href="./ProductDetail.html?id=${product.id}" class="btn btn-secondary btn-sm" style="flex: 1; text-align: center;">Details</a>
+                                            <button class="btn btn-primary btn-sm" onclick="quickAddToCart(${product.id})" style="flex: 1;" ${inStock ? '' : 'disabled'}>
+                                                ${inStock ? '+ Add to Cart' : 'Out of Stock'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                } catch (e) {
+                    console.error('Failed to load featured products:', e);
+                    container.innerHTML = `<p style="grid-column: 1 / -1; color: var(--text-muted);">Unable to load featured products: ${escapeHtml(e.message)}</p>`;
+                }
+            }
+        });
+
+        async function quickAddToCart(productId) {
+            const token = Api.getToken();
+            if (!token) {
+                showToast('Please sign in to add items to your cart', 'info');
+                setTimeout(() => window.location.href = './Login.html', 1000);
+                return;
+            }
+            try {
+                await Api.post('/cart/items', { productId, quantity: 1 });
+                showToast('Added to your cursed cart!', 'success');
+                updateCartBadge();
+            } catch (err) {
+                showToast(err.message || 'Failed to add item', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
